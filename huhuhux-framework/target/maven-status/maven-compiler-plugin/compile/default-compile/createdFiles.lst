@@ -1,0 +1,11 @@
+com\huhuhux\doman\vo\UserInfoVo.class
+com\huhuhux\util\WebUtils.class
+com\huhuhux\config\FastJsonRedisSerializer.class
+com\huhuhux\service\impl\UserDetailsServiceImpl.class
+com\huhuhux\doman\entity\LoginUser.class
+com\huhuhux\util\JwtUtil.class
+com\huhuhux\service\LoginUserService.class
+com\huhuhux\doman\vo\UserVo.class
+com\huhuhux\util\RedisCache.class
+com\huhuhux\config\RedisConfig.class
+com\huhuhux\service\impl\LoginUserServiceImpl.class

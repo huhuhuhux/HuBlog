@@ -15,4 +15,8 @@ public class SystemConstants
 
     public static final String LINK_STATUS_NORMAL = "0";
 
+
+    public static final String COMMENT_TYPE_ARTICLE = "0";
+
+    public static final String COMMENT_TYPE_LINK = "1";
 }

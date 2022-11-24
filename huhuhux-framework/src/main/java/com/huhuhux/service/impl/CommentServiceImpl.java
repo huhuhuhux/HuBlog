@@ -3,9 +3,9 @@ package com.huhuhux.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.huhuhux.constants.SystemConstants;
 import com.huhuhux.doman.ResponseResult;
 import com.huhuhux.doman.entity.Comment;
-import com.huhuhux.doman.entity.LoginUser;
 import com.huhuhux.doman.entity.User;
 import com.huhuhux.doman.enums.AppHttpCodeEnum;
 import com.huhuhux.doman.vo.CommentVo;
@@ -17,16 +17,11 @@ import com.huhuhux.service.UserService;
 import com.huhuhux.util.BeanCopyUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -42,13 +37,16 @@ public  class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> imp
     UserService userService;
 
     @Override
-    public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
+    public ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
 
         //分页查出该文章的有根评论
         LambdaQueryWrapper<Comment> queryWrapper =new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getRootId,-1);
-        queryWrapper.eq(Comment::getArticleId,articleId);
 
+        queryWrapper.eq(SystemConstants.COMMENT_TYPE_ARTICLE.equals(commentType),Comment::getArticleId,articleId);
+
+        queryWrapper.eq(Comment::getRootId,-1);
+
+        queryWrapper.eq(Comment::getType,commentType);
 
         Page page = new Page(pageNum,pageSize);
         page(page,queryWrapper);
@@ -78,6 +76,7 @@ public  class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> imp
         if (!StringUtils.hasText(comment.getContent())){
             throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
         }
+
         save(comment);
         return ResponseResult.okResult();
     }

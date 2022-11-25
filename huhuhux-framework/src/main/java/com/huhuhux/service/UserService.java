@@ -1,6 +1,7 @@
 package com.huhuhux.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.huhuhux.doman.ResponseResult;
 import com.huhuhux.doman.entity.User;
 
 
@@ -12,5 +13,6 @@ import com.huhuhux.doman.entity.User;
  */
 public interface UserService extends IService<User> {
 
+    ResponseResult userInfo();
 }
 

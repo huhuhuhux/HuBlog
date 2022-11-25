@@ -20,3 +20,9 @@ mybatis-plus:
       logic-delete-value: 1 #逻辑已删除之（默认为1）
       logic-not-delete-value: 0 #逻辑未删除值（默认为0）
       id-type: auto
+
+oss:
+  accessKey: mvXC7n9pBJox1bbVwEqh5vfUe_UypCICbIDrAxBY
+  secretKey: HeGORFlK6SBYnpC5eP2TMbz5WYXHxWFg93owgA7p
+  bucket: huhuhux-img
+  url: rlw4lgsus.hn-bkt.clouddn.com

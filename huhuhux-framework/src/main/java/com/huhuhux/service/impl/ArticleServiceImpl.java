@@ -17,19 +17,28 @@ import com.huhuhux.service.ArticleService;
 import com.huhuhux.service.CategoryService;
 import com.huhuhux.util.BeanCopyUtils;
 import com.huhuhux.doman.vo.HotArticleVo;
+import com.huhuhux.util.RedisCache;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public ResponseResult hotArticleList() {
@@ -92,14 +101,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResponseResult getArticle(Long id) {
         Article article = getById(id);
-
+        //从redis中拿阅读量
+        Integer viewCount = redisCache.getCacheMapValue("article:viewcount", id.toString());
+        article.setViewCount(viewCount.longValue());
+        //转化成vo
         ArticleDetailVo articleDetailVo = BeanCopyUtils.beanCopy(article, ArticleDetailVo.class);
 
+        //拿文章类别存入vo
         Category category = categoryService.getById(articleDetailVo.getCategoryId());
         if (category!=null) {
             articleDetailVo.setCategoryName(category.getName());
         }
 
         return ResponseResult.okResult(articleDetailVo);
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+
+        redisCache.incrementCacheMapValue("article:viewcount",id.toString(),1);
+        return ResponseResult.okResult();
     }
 }

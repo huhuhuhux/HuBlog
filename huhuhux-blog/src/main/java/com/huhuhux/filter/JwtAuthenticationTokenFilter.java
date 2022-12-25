@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -47,9 +48,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             WebUtils.renderString(httpServletResponse, JSON.toJSONString(result));
             return;
         }
-        String key = "login"+userId;
+        String key = "bolgLogin"+userId;
         LoginUser cacheObject = redisCache.getCacheObject(key);
-
+        if (Objects.isNull(cacheObject)){
+            ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+            WebUtils.renderString(httpServletResponse, JSON.toJSONString(result));
+            return;
+        }
         //存入到ContextHolder
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(cacheObject,null,null);

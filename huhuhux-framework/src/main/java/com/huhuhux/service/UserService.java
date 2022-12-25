@@ -14,5 +14,9 @@ import com.huhuhux.doman.entity.User;
 public interface UserService extends IService<User> {
 
     ResponseResult userInfo();
+
+    ResponseResult updateUserInfo(User user);
+
+    ResponseResult userRegister(User user);
 }
 

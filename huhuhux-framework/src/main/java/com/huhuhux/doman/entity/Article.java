@@ -180,6 +180,12 @@ public class Article extends Model<Article> {
         this.delFlag = delFlag;
     }
 
+    public Article(Long id, Long viewCount){
+        this.id =id;
+        this.viewCount=viewCount;
+    }
+
+
     /**
      * 获取主键值
      *

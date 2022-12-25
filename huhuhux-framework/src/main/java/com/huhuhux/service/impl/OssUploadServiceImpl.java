@@ -18,13 +18,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 @Data
 @Service
 @ConfigurationProperties(prefix = "oss")
-public class UploadServiceImpl implements UploadService {
+public class OssUploadServiceImpl implements UploadService {
 
     private String accessKey;
     private String secretKey ;
@@ -41,9 +38,9 @@ public class UploadServiceImpl implements UploadService {
         }
 
         String filePath = PathUtils.generateFilePath(originalFilename);
-        String url = upload2Qiniu(img, filePath);
+        String endUrl = upload2Qiniu(img, filePath);
 
-        return ResponseResult.okResult(url);
+        return ResponseResult.okResult(endUrl);
     }
 
     public String upload2Qiniu(MultipartFile multipartFile, String filePath){
@@ -63,7 +60,7 @@ public class UploadServiceImpl implements UploadService {
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             System.out.println(putRet.key);
             System.out.println(putRet.hash);
-            return url+key;
+            return url+"/"+key;
         } catch (QiniuException ex) {
             Response r = ex.response;
             System.err.println(r.toString());

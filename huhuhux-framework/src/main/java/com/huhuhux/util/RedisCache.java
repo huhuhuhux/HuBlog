@@ -79,6 +79,17 @@ public class RedisCache
     }
 
     /**
+     * 自增key中哈希key的值
+     *
+     * @param key redis的key;
+     * @param hkey 哈希表的key
+     * @param v 要自增几
+     */
+    public void incrementCacheMapValue(String key,String hkey,long v){
+        redisTemplate.boundHashOps(key).increment(hkey,v);
+    }
+
+    /**
      * 删除单个对象
      *
      * @param key
